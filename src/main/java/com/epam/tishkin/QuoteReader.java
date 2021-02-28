@@ -1,23 +1,34 @@
 package com.epam.tishkin;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class QuoteReader {
-    public static void main(String[] args) throws IOException {
-        DocumentReader reader = new DocumentReader();
-        String address = "18";
-        reader.readDocument(address);
+    public static void main(String[] args) {
+        Parser parser = new Parser();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            String quoteNumber;
+            while (true) {
+                quoteNumber = reader.readLine();
+                if ("exit".equals(quoteNumber)) {
+                    break;
+                }
+                String[] quote = parser.parseDocument(quoteNumber);
+                printQuote(quote);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        //try (BufferedReader reader = new BufferedReader(new FileReader("D:\\Программирование\\test.txt"))) {
-            //String line = "";
-           // while ((line = reader.readLine()) != null) {
-            //    parser.findSubstringWithPattern(line);
-           // }
-       // }
+    static void printQuote(String[] quote) {
+        if (quote == null) {
+            System.out.println("There is no quote with this number");
+        } else {
+            for (String current : quote) {
+                System.out.println(current);
+            }
+        }
     }
 }
