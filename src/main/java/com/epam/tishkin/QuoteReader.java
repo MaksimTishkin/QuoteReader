@@ -27,7 +27,7 @@ public class QuoteReader {
             System.out.println("There is no quote with this number");
         } else {
             for (String current : quote) {
-                System.out.println(current);
+                System.out.println(current.trim());
             }
         }
     }
