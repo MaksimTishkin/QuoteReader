@@ -16,7 +16,7 @@ public class Parser {
     final static Logger logger = LogManager.getLogger(Parser.class);
 
     String[] parseDocument(String quoteNumber) throws MalformedURLException, NonExistentQuoteException {
-        URL url = new URL("https://bash.im/quote/" + quoteNumber);
+        URL url = new URL("https://tishkin.im/quote/" + quoteNumber);
         Pattern pattern = Pattern.compile("<title>(.+)</title>");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
             Matcher matcher = pattern.matcher(reader.readLine());
@@ -33,7 +33,7 @@ public class Parser {
                 }
             }
         } catch (IOException e) {
-            logger.error("Incorrect URL: " + url.getHost() + url.getPath());
+            logger.fatal("Incorrect URL: " + url.getHost() + url.getPath());
         }
         throw new NonExistentQuoteException("There is no quote with this number " + quoteNumber);
     }

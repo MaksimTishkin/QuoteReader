@@ -23,6 +23,7 @@ public class QuoteReader {
                 try {
                     String[] quote = parser.parseDocument(quoteNumber);
                     printQuote(quote);
+                    logger.info("Showing the quote number " + quoteNumber);
                 } catch (NonExistentQuoteException e) {
                     logger.warn(e.getMessage());
                 }
