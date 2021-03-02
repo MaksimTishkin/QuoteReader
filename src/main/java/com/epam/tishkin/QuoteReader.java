@@ -1,5 +1,6 @@
 package com.epam.tishkin;
 
+import com.epam.tishkin.exception.NonExistentQuoteException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,21 +20,22 @@ public class QuoteReader {
                 if ("exit".equals(quoteNumber)) {
                     break;
                 }
-                String[] quote = parser.parseDocument(quoteNumber);
-                printQuote(quote);
+                try {
+                    String[] quote = parser.parseDocument(quoteNumber);
+                    printQuote(quote);
+                } catch (NonExistentQuoteException e) {
+                    logger.warn(e.getMessage());
+                }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Sorry, Input incorrect", e);
         }
     }
 
     private static void printQuote(String[] quote) {
-        if (quote == null) {
-            System.out.println("There is no quote with this number");
-        } else {
-            for (String current : quote) {
-                System.out.println(current.trim());
-            }
+        for (String current : quote) {
+            System.out.println(current.trim());
         }
     }
 }
+

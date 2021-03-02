@@ -1,5 +1,9 @@
 package com.epam.tishkin;
 
+import com.epam.tishkin.exception.NonExistentQuoteException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,39 +13,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
+    final static Logger logger = LogManager.getLogger(Parser.class);
 
-    String[] parseDocument(String quoteNumber) throws MalformedURLException {
+    String[] parseDocument(String quoteNumber) throws MalformedURLException, NonExistentQuoteException {
         URL url = new URL("https://bash.im/quote/" + quoteNumber);
-        if (isQuoteExists(url, quoteNumber)) {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
-                String currentLine;
-                while ((currentLine = reader.readLine()) != null) {
-                    if (currentLine.contains("quote__body")) {
-                        currentLine = reader.readLine();
-                        break;
-                    }
-                }
-                if (currentLine != null) {
-                    return currentLine.trim().split("<br\\s?/?>");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    boolean isQuoteExists(URL url, String quoteNumber) {
         Pattern pattern = Pattern.compile("<title>(.+)</title>");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
             Matcher matcher = pattern.matcher(reader.readLine());
             while (!matcher.find()) {
                 matcher = pattern.matcher(reader.readLine());
             }
-            return matcher.group().contains(quoteNumber);
+            if (matcher.group().contains(quoteNumber)) {
+                String currentLine;
+                while ((currentLine = reader.readLine()) != null) {
+                    if (currentLine.contains("quote__body")) {
+                        currentLine = reader.readLine();
+                        return currentLine.trim().split("<br\\s?/?>");
+                    }
+                }
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Incorrect URL: " + url.getHost() + url.getPath());
         }
-        return false;
+        throw new NonExistentQuoteException("There is no quote with this number " + quoteNumber);
     }
 }
