@@ -9,10 +9,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    URL url;
 
     String[] parseDocument(String quoteNumber) throws MalformedURLException {
-        url = new URL("https://bash.im/quote/" + quoteNumber);
+        URL url = new URL("https://bash.im/quote/" + quoteNumber);
         if (isQuoteExists(url, quoteNumber)) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
                 String currentLine;

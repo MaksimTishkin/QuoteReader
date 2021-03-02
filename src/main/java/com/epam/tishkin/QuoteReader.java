@@ -1,10 +1,15 @@
 package com.epam.tishkin;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 
 public class QuoteReader {
+    final static Logger logger = LogManager.getLogger(QuoteReader.class);
+
     public static void main(String[] args) {
         Parser parser = new Parser();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
@@ -22,7 +27,7 @@ public class QuoteReader {
         }
     }
 
-    static void printQuote(String[] quote) {
+    private static void printQuote(String[] quote) {
         if (quote == null) {
             System.out.println("There is no quote with this number");
         } else {
