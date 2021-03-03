@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 
 public class QuoteReaderTest {
@@ -16,7 +15,6 @@ public class QuoteReaderTest {
     @BeforeAll
     static void initAll() {
         parser = new Parser();
-        String prefixURL = "https://bash.im/quote/";
         existingQuoteNumber = "18";
         nonExistentQuoteNumber = "225";
     }
@@ -29,6 +27,6 @@ public class QuoteReaderTest {
                 "&lt;Kuno[ex-driver]&gt; ну... в разбитое очко..."
         };
         Assertions.assertArrayEquals(expectedQuote, parser.parseDocument(existingQuoteNumber));
-        Assertions.assertNull(parser.parseDocument(nonExistentQuoteNumber));
+        Assertions.assertThrows(NonExistentQuoteException.class, () -> parser.parseDocument(nonExistentQuoteNumber));
     }
 }
